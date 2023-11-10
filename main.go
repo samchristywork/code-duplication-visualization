@@ -93,6 +93,21 @@ func getFileContents(filename string) string {
 	return contents
 }
 
+func checkForStringInFile(filename string, needle string) bool {
+	haystack := getFileContents(filename)
+
+	alines := strings.Split(haystack, "\n")
+	blines := strings.Split(needle, "\n")
+	needleLen := len(blines)
+
+	additions, deletions := diff(alines, blines)
+
+	fmt.Printf("File %s ", filename)
+	fmt.Printf("additions: %d, deletions: %d\n", additions, deletions)
+
+	return additions*10 < needleLen
+}
+
 func main() {
 	filename := "target/computer.go"
 	needle := `TestString`
