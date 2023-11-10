@@ -71,7 +71,7 @@ func diff(a, b []string) (int, int) {
 }
 
 func getFileContents(filename string) string {
-	fmt.Printf("Reading file %s\n", filename)
+	//fmt.Printf("Reading file %s\n", filename)
 
 	f, err := os.Open(filename)
 	if err != nil {
@@ -100,10 +100,10 @@ func checkForStringInFile(filename string, needle string) bool {
 	blines := strings.Split(needle, "\n")
 	needleLen := len(blines)
 
-	additions, deletions := diff(alines, blines)
+	additions, _ := diff(alines, blines)
 
-	fmt.Printf("File %s ", filename)
-	fmt.Printf("additions: %d, deletions: %d\n", additions, deletions)
+	//fmt.Printf("File %s ", filename)
+	//fmt.Printf("additions: %d, deletions: %d\n", additions, deletions)
 
 	return additions*10 < needleLen
 }
