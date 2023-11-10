@@ -108,6 +108,29 @@ func checkForStringInFile(filename string, needle string) bool {
 	return additions*10 < needleLen
 }
 
+func checkForStringInDirectory(dirname string, needle string) bool {
+	files, err := os.ReadDir(dirname)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, file := range files {
+		filename := dirname + "/" + file.Name()
+		if file.IsDir() {
+			if checkForStringInDirectory(filename, needle) {
+				return true
+			}
+		} else {
+			if checkForStringInFile(filename, needle) {
+				fmt.Printf("Found in file %s\n", filename)
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
 func main() {
 	filename := "target/computer.go"
 	needle := `TestString`
