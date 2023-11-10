@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 func longestCommonSubsequence(a, b []string) [][]int {
@@ -21,6 +22,44 @@ func longestCommonSubsequence(a, b []string) [][]int {
 		}
 	}
 	return dp
+}
+
+func diff(a, b []string) (int, int) {
+	dp := longestCommonSubsequence(a, b)
+	i, j := len(a), len(b)
+
+	additions := 0
+	deletions := 0
+
+	for i > 0 && j > 0 {
+		if a[i-1] == b[j-1] {
+			// fmt.Printf("  %s\n", a[i-1])
+			i--
+			j--
+		} else if dp[i-1][j] > dp[i][j-1] {
+			// fmt.Printf("- %s\n", a[i-1])
+			i--
+			deletions++
+		} else {
+			// fmt.Printf("+ %s\n", b[j-1])
+			j--
+			additions++
+		}
+	}
+
+	for i > 0 {
+		// fmt.Printf("- %s\n", a[i-1])
+		i--
+		deletions++
+	}
+
+	for j > 0 {
+		// fmt.Printf("+ %s\n", b[j-1])
+		j--
+		additions++
+	}
+
+	return additions, deletions
 }
 
 func main() {
