@@ -5,6 +5,13 @@ import (
 	"strings"
 )
 
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
 func longestCommonSubsequence(a, b []string) [][]int {
 	lenA, lenB := len(a), len(b)
 	dp := make([][]int, lenA+1)
