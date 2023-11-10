@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -67,6 +68,29 @@ func diff(a, b []string) (int, int) {
 	}
 
 	return additions, deletions
+}
+
+func getFileContents(filename string) string {
+	fmt.Printf("Reading file %s\n", filename)
+
+	f, err := os.Open(filename)
+	if err != nil {
+		panic(err)
+	}
+
+	defer f.Close()
+
+	var contents string
+	buf := make([]byte, 1024)
+	for {
+		n, err := f.Read(buf[:])
+		if err != nil {
+			break
+		}
+		contents += string(buf[0:n])
+	}
+
+	return contents
 }
 
 func main() {
