@@ -93,7 +93,7 @@ func getFileContents(filename string) string {
 	return contents
 }
 
-func checkForStringInFile(filename string, needle string) bool {
+func checkForStringInFile(filename string, needle string, threshold float64) bool {
 	haystack := getFileContents(filename)
 
 	alines := strings.Split(haystack, "\n")
@@ -105,10 +105,10 @@ func checkForStringInFile(filename string, needle string) bool {
 	//fmt.Printf("File %s ", filename)
 	//fmt.Printf("additions: %d, deletions: %d\n", additions, deletions)
 
-	return additions*10 < needleLen
+	return float64(additions) < float64(needleLen)*threshold
 }
 
-func checkForStringInDirectory(dirname string, needle string) bool {
+func checkForStringInDirectory(dirname string, needle string, threshold float64) bool {
 	files, err := os.ReadDir(dirname)
 	if err != nil {
 		panic(err)
@@ -117,11 +117,11 @@ func checkForStringInDirectory(dirname string, needle string) bool {
 	for _, file := range files {
 		filename := dirname + "/" + file.Name()
 		if file.IsDir() {
-			if checkForStringInDirectory(filename, needle) {
+			if checkForStringInDirectory(filename, needle, threshold) {
 				return true
 			}
 		} else {
-			if checkForStringInFile(filename, needle) {
+			if checkForStringInFile(filename, needle, threshold) {
 				fmt.Printf("Found in file %s\n", filename)
 				return true
 			}
