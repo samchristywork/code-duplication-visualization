@@ -139,7 +139,6 @@ func checkForStringInDirectory(dirname string, needle string, threshold float64,
 			}
 		} else {
 			if checkForStringInFile(filename, needle, threshold) {
-				fmt.Printf("Found in file %s\n", filename)
 				return true
 			}
 		}
@@ -173,10 +172,15 @@ func samplesFromFile(filename string) []Sample {
 	return samples
 }
 
-func main() {
-	filename := "target/computer.go"
-	needle := `TestString`
+func scanFile(filename string) {
+	samples := samplesFromFile(filename)
+	for _, sample := range samples {
+		neighbors := strings.Join(sample.neighbors, "\n")
+		ret := checkForStringInDirectory("target", neighbors, 0.3, []string{filename})
+		fmt.Printf("%v\t%s\n", ret, sample.line)
+	}
+}
 
-	ret := checkForStringInFile(filename, needle)
-	fmt.Printf("ret: %v\n", ret)
+func main() {
+	scanFile("target/computer.go")
 }
