@@ -6,6 +6,11 @@ import (
 	"strings"
 )
 
+type Sample struct {
+	line      string
+	neighbors []string
+}
+
 func max(a, b int) int {
 	if a > b {
 		return a
@@ -143,14 +148,26 @@ func checkForStringInDirectory(dirname string, needle string, threshold float64,
 	return false
 }
 
-func samplesFromFile(filename string) []string {
+func samplesFromFile(filename string) []Sample {
 	content := getFileContents(filename)
 	lines := strings.Split(content, "\n")
-	samples := make([]string, 0)
+	samples := make([]Sample, len(lines))
 
-	for i := 0; i < len(lines)-5; i++ {
-		sample := strings.Join(lines[i:i+5], "\n")
-		samples = append(samples, sample)
+	for i := 0; i < len(lines); i++ {
+		sample := Sample{
+			line:      lines[i],
+			neighbors: make([]string, 9),
+		}
+
+		for j := -4; j <= 4; j++ {
+			if i+j < 0 || i+j >= len(lines) {
+				sample.neighbors[j+4] = ""
+			} else {
+				sample.neighbors[j+4] = lines[i+j]
+			}
+		}
+
+		samples[i] = sample
 	}
 
 	return samples
