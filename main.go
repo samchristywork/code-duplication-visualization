@@ -108,7 +108,7 @@ func checkForStringInFile(filename string, needle string, threshold float64) boo
 	return float64(additions) < float64(needleLen)*threshold
 }
 
-func checkForStringInDirectory(dirname string, needle string, threshold float64) bool {
+func checkForStringInDirectory(dirname string, needle string, threshold float64, ignore []string) bool {
 	files, err := os.ReadDir(dirname)
 	if err != nil {
 		panic(err)
@@ -116,8 +116,15 @@ func checkForStringInDirectory(dirname string, needle string, threshold float64)
 
 	for _, file := range files {
 		filename := dirname + "/" + file.Name()
+
+		for _, ignoreFile := range ignore {
+			if filename == ignoreFile {
+				continue
+			}
+		}
+
 		if file.IsDir() {
-			if checkForStringInDirectory(filename, needle, threshold) {
+			if checkForStringInDirectory(filename, needle, threshold, ignore) {
 				return true
 			}
 		} else {
