@@ -5,6 +5,7 @@ import (
 	"image"
 	"image/color"
 	"image/png"
+	"net/http"
 	"os"
 	"strings"
 )
@@ -79,8 +80,6 @@ func diff(a, b []string) (int, int) {
 }
 
 func getFileContents(filename string) string {
-	//fmt.Printf("Reading file %s\n", filename)
-
 	f, err := os.Open(filename)
 	if err != nil {
 		panic(err)
@@ -227,6 +226,11 @@ func createPNGFromSource(filename string) {
 	fmt.Printf("Wrote image to target/computer.png\n")
 }
 
+func startServer(port int) {
+	fmt.Printf("Starting server on port %d\n", port)
+	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+}
+
 func main() {
-	scanFile("target/computer.go")
+	startServer(8000)
 }
