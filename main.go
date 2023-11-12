@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"image"
+	"image/color"
+	"image/png"
 	"os"
 	"strings"
 )
@@ -179,6 +182,49 @@ func scanFile(filename string) {
 		ret := checkForStringInDirectory("target", neighbors, 0.3, []string{filename})
 		fmt.Printf("%v\t%s\n", ret, sample.line)
 	}
+}
+
+func createPNGFromSource(filename string) {
+	content := getFileContents(filename)
+	lines := strings.Split(content, "\n")
+
+	height := len(lines)
+	width := 0
+	for _, line := range lines {
+		if len(line) > width {
+			width = len(line)
+		}
+	}
+
+	img := image.NewRGBA(image.Rect(0, 0, width, height))
+
+	background := color.RGBA{0, 0, 0, 255}
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			img.Set(x, y, background)
+		}
+	}
+
+	for y, line := range lines {
+		for x, char := range line {
+			if char == ' ' || char == '\t' {
+				img.Set(x, y, color.RGBA{0, 0, 0, 255})
+			} else {
+				img.Set(x, y, color.RGBA{255, 255, 255, 255})
+			}
+		}
+	}
+
+	f, err := os.Create("test.png")
+	if err != nil {
+		panic(err)
+	}
+
+	defer f.Close()
+
+	png.Encode(f, img)
+
+	fmt.Printf("Wrote image to target/computer.png\n")
 }
 
 func main() {
