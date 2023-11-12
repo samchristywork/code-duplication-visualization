@@ -131,6 +131,19 @@ func checkForStringInDirectory(dirname string, needle string, threshold float64)
 	return false
 }
 
+func samplesFromFile(filename string) []string {
+	content := getFileContents(filename)
+	lines := strings.Split(content, "\n")
+	samples := make([]string, 0)
+
+	for i := 0; i < len(lines)-5; i++ {
+		sample := strings.Join(lines[i:i+5], "\n")
+		samples = append(samples, sample)
+	}
+
+	return samples
+}
+
 func main() {
 	filename := "target/computer.go"
 	needle := `TestString`
