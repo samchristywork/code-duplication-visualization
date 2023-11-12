@@ -117,10 +117,15 @@ func checkForStringInDirectory(dirname string, needle string, threshold float64,
 	for _, file := range files {
 		filename := dirname + "/" + file.Name()
 
+		ignoreFlag := false
 		for _, ignoreFile := range ignore {
 			if filename == ignoreFile {
-				continue
+				ignoreFlag = true
 			}
+		}
+
+		if ignoreFlag {
+			continue
 		}
 
 		if file.IsDir() {
