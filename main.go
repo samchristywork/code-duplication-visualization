@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"image"
 	"image/color"
@@ -13,6 +14,11 @@ import (
 type Sample struct {
 	line      string
 	neighbors []string
+}
+
+type Line struct {
+	Line  string
+	Color color.RGBA
 }
 
 func max(a, b int) int {
@@ -227,6 +233,39 @@ func createPNGFromSource(filename string) {
 }
 
 func startServer(port int) {
+	http.Handle("/file", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		filename := r.URL.Query().Get("file")
+
+		samples := samplesFromFile(filename)
+
+		w.Header().Set("Content-Type", "application/json")
+
+		lines := []Line{}
+
+		for _, sample := range samples {
+			line := Line{
+				Line: sample.line,
+			}
+
+			if checkForStringInDirectory("target", strings.Join(sample.neighbors, "\n"), 0.3, []string{filename}) {
+				line.Color = color.RGBA{255, 0, 0, 255}
+			} else {
+				line.Color = color.RGBA{0, 255, 0, 255}
+			}
+
+			lines = append(lines, line)
+		}
+
+		bytes, err := json.Marshal(lines)
+		if err != nil {
+			panic(err)
+		}
+
+		w.Write(bytes)
+	}))
+
+	http.Handle("/", http.FileServer(http.Dir("./static")))
+
 	fmt.Printf("Starting server on port %d\n", port)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
