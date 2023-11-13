@@ -15,19 +15,23 @@
 </head>
 
 <body>
-  <pre style='font-size: 0.2rem;'><code id='target'></code></pre>
+  <div id='target'></div>
 </body>
 
 <script>
   let target = document.getElementById('target');
-  fetch('file?file=target/computer.go')
+  let panel = document.createElement('div');
+  target.appendChild(panel);
+  fetch(`file?file=target/computer.go`)
     .then(response => response.json())
     .then(data => {
       for (let line of data) {
         let div = document.createElement('div');
         div.innerText = line.Line;
         div.style.color = `rgba(${line.Color.R}, ${line.Color.G}, ${line.Color.B}, ${line.Color.A})`;
-        target.appendChild(div);
+        div.style.fontSize = `0.2rem`;
+        div.style.fontFamily = `monospace`;
+        panel.appendChild(div);
       }
     });
 </script>
