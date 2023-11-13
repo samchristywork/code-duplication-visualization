@@ -6,8 +6,30 @@
   <meta http-equiv="Content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css" type="text/css">
+  <style>
+    body {
+      color: #fff;
+      background-color: #000;
+    }
+  </style>
 </head>
 
 <body>
+  <pre style='font-size: 0.2rem;'><code id='target'></code></pre>
 </body>
+
+<script>
+  let target = document.getElementById('target');
+  fetch('file?file=target/computer.go')
+    .then(response => response.json())
+    .then(data => {
+      for (let line of data) {
+        let div = document.createElement('div');
+        div.innerText = line.Line;
+        div.style.color = `rgba(${line.Color.R}, ${line.Color.G}, ${line.Color.B}, ${line.Color.A})`;
+        target.appendChild(div);
+      }
+    });
+</script>
+
 </html>
