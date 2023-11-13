@@ -115,9 +115,6 @@ func checkForStringInFile(filename string, needle string, threshold float64) boo
 
 	additions, _ := diff(alines, blines)
 
-	//fmt.Printf("File %s ", filename)
-	//fmt.Printf("additions: %d, deletions: %d\n", additions, deletions)
-
 	return float64(additions) < float64(needleLen)*threshold
 }
 
@@ -230,6 +227,14 @@ func createPNGFromSource(filename string) {
 	png.Encode(f, img)
 
 	fmt.Printf("Wrote image to target/computer.png\n")
+}
+
+func middleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Printf("%s %s %s %s\n", r.RemoteAddr, r.Proto, r.Method, r.URL)
+
+		next.ServeHTTP(w, r)
+	})
 }
 
 func startServer(port int) {
