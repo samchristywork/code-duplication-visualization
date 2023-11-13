@@ -11,11 +11,22 @@
       color: #fff;
       background-color: #000;
     }
+
+    .panels {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-items: stretch;
+      align-content: stretch;
+      font-size: 0.2rem;
+      font-family: monospace;
+    }
   </style>
 </head>
 
 <body>
-  <div id='target'></div>
+  <div class='panels' id='target'></div>
 </body>
 
 <script>
