@@ -238,7 +238,7 @@ func middleware(next http.Handler) http.Handler {
 }
 
 func startServer(port int) {
-	http.Handle("/file", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	http.Handle("/file", middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		filename := r.URL.Query().Get("file")
 
 		samples := samplesFromFile(filename)
@@ -267,9 +267,9 @@ func startServer(port int) {
 		}
 
 		w.Write(bytes)
-	}))
+	})))
 
-	http.Handle("/", http.FileServer(http.Dir("./static")))
+	http.Handle("/", middleware(http.FileServer(http.Dir("./static"))))
 
 	fmt.Printf("Starting server on port %d\n", port)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
