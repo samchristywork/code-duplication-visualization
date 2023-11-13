@@ -30,21 +30,27 @@
 </body>
 
 <script>
+  let files = [
+    'target/computer.go',
+    'target/fen.go',
+    'target/main.go',
+  ];
+
   let target = document.getElementById('target');
-  let panel = document.createElement('div');
-  target.appendChild(panel);
-  fetch(`file?file=target/computer.go`)
-    .then(response => response.json())
-    .then(data => {
-      for (let line of data) {
-        let div = document.createElement('div');
-        div.innerText = line.Line;
-        div.style.color = `rgba(${line.Color.R}, ${line.Color.G}, ${line.Color.B}, ${line.Color.A})`;
-        div.style.fontSize = `0.2rem`;
-        div.style.fontFamily = `monospace`;
-        panel.appendChild(div);
-      }
-    });
+  for (let file of files) {
+    let panel = document.createElement('div');
+    target.appendChild(panel);
+    fetch(`file?file=${file}`)
+      .then(response => response.json())
+      .then(data => {
+        for (let line of data) {
+          let div = document.createElement('div');
+          div.innerText = line.Line;
+          div.style.color = `rgba(${line.Color.R}, ${line.Color.G}, ${line.Color.B}, ${line.Color.A})`;
+          panel.appendChild(div);
+        }
+      });
+  }
 </script>
 
 </html>
