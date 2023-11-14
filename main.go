@@ -269,6 +269,21 @@ func startServer(port int) {
 		w.Write(bytes)
 	})))
 
+	http.Handle("/files", middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		files := []string{
+			"target/computer.go",
+			"target/fen.go",
+			"target/main.go",
+		}
+
+		bytes, err := json.Marshal(files)
+		if err != nil {
+			panic(err)
+		}
+
+		w.Write(bytes)
+	})))
+
 	http.Handle("/", middleware(http.FileServer(http.Dir("./static"))))
 
 	fmt.Printf("Starting server on port %d\n", port)
