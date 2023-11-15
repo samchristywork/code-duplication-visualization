@@ -237,6 +237,27 @@ func middleware(next http.Handler) http.Handler {
 	})
 }
 
+func getFiles(dirname string, extension string) []string {
+	files, err := os.ReadDir(dirname)
+	if err != nil {
+		panic(err)
+	}
+
+	var ret []string
+
+	for _, file := range files {
+		filename := dirname + "/" + file.Name()
+
+		if file.IsDir() {
+			ret = append(ret, getFiles(filename, extension)...)
+		} else if strings.HasSuffix(filename, extension) {
+			ret = append(ret, filename)
+		}
+	}
+
+	return ret
+}
+
 func startServer(port int) {
 	http.Handle("/file", middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		filename := r.URL.Query().Get("file")
@@ -270,11 +291,7 @@ func startServer(port int) {
 	})))
 
 	http.Handle("/files", middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		files := []string{
-			"target/computer.go",
-			"target/fen.go",
-			"target/main.go",
-		}
+		files := getFiles("target", ".go")
 
 		w.Header().Set("Content-Type", "application/json")
 
