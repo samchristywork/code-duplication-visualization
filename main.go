@@ -276,6 +276,8 @@ func startServer(port int) {
 			"target/main.go",
 		}
 
+		w.Header().Set("Content-Type", "application/json")
+
 		bytes, err := json.Marshal(files)
 		if err != nil {
 			panic(err)
