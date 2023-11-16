@@ -35,4 +35,5 @@ body {
   white-space: pre;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: bold;
 }
