@@ -17,8 +17,9 @@ type Sample struct {
 }
 
 type Line struct {
-	Line  string
-	Color color.RGBA
+	Line    string
+	Color   color.RGBA
+	Tooltip string
 }
 
 func max(a, b int) int {
@@ -270,7 +271,8 @@ func startServer(port int) {
 
 		for _, sample := range samples {
 			line := Line{
-				Line: sample.line,
+				Line:    sample.line,
+				Tooltip: "Test",
 			}
 
 			if checkForStringInDirectory("target", strings.Join(sample.neighbors, "\n"), 0.3, []string{filename}) {
