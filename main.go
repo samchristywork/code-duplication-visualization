@@ -128,7 +128,7 @@ func checkForStringInFile(filename string, needle string, threshold float64) boo
 	return float64(additions) < float64(needleLen)*threshold
 }
 
-func checkForStringInDirectory(dirname string, needle string, threshold float64, ignore []string) bool {
+func checkForStringInDirectory(dirname string, needle string, threshold float64, ignore []string) []string {
 	files, err := os.ReadDir(dirname)
 	if err != nil {
 		panic(err)
@@ -149,17 +149,18 @@ func checkForStringInDirectory(dirname string, needle string, threshold float64,
 		}
 
 		if file.IsDir() {
-			if checkForStringInDirectory(filename, needle, threshold, ignore) {
-				return true
+			files := checkForStringInDirectory(filename, needle, threshold, ignore)
+			if len(files) > 0 {
+				return files
 			}
 		} else {
 			if checkForStringInFile(filename, needle, threshold) {
-				return true
+				return []string{filename}
 			}
 		}
 	}
 
-	return false
+	return []string{}
 }
 
 func samplesFromFile(filename string) []Sample {
@@ -279,12 +280,14 @@ func startServer(port int) {
 		lines := []Line{}
 
 		for _, sample := range samples {
+			files := checkForStringInDirectory("target", strings.Join(sample.neighbors, "\n"), 0.3, []string{filename})
+
 			line := Line{
 				Line:    sample.line,
-				Tooltip: "Test",
+				Tooltip: "",
 			}
 
-			if checkForStringInDirectory("target", strings.Join(sample.neighbors, "\n"), 0.3, []string{filename}) {
+			if len(files) > 0 {
 				line.Color = color.RGBA{255, 0, 0, 255}
 			} else {
 				line.Color = color.RGBA{0, 255, 0, 255}
