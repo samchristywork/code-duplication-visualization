@@ -29,6 +29,15 @@ func max(a, b int) int {
 	return b
 }
 
+func normalize(s string) string {
+	s = strings.ReplaceAll(s, "\t", "")
+	return s
+}
+
+func compare(a, b string) bool {
+	return normalize(a) == normalize(b)
+}
+
 func longestCommonSubsequence(a, b []string) [][]int {
 	lenA, lenB := len(a), len(b)
 	dp := make([][]int, lenA+1)
@@ -38,7 +47,7 @@ func longestCommonSubsequence(a, b []string) [][]int {
 
 	for i := 1; i <= lenA; i++ {
 		for j := 1; j <= lenB; j++ {
-			if a[i-1] == b[j-1] {
+			if compare(a[i-1], b[j-1]) {
 				dp[i][j] = dp[i-1][j-1] + 1
 			} else {
 				dp[i][j] = max(dp[i-1][j], dp[i][j-1])
