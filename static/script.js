@@ -1,3 +1,5 @@
+let tooltip = document.getElementById('tooltip');
+
 fetch(`/files`)
   .then(response => response.json())
   .then(data => {
@@ -17,6 +19,20 @@ fetch(`/files`)
             span.className = 'line';
             span.innerText = line.Line;
             span.style.color = `rgba(${line.Color.R}, ${line.Color.G}, ${line.Color.B}, ${line.Color.A})`;
+
+            let t = line.Tooltip;
+            if (t) {
+              span.addEventListener('mouseover', () => {
+                tooltip.innerText = t;
+                tooltip.style.display = 'block';
+                tooltip.style.left = `${e.clientX + 10}px`;
+                tooltip.style.top = `${e.clientY + 10}px`;
+              });
+              span.addEventListener('mouseout', () => {
+                tooltip.style.display = 'none';
+              });
+            }
+
             panel.appendChild(span);
           }
         });
