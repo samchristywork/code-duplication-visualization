@@ -25,11 +25,13 @@ fetch(`/files`)
               span.addEventListener('mouseover', () => {
                 tooltip.innerText = t;
                 tooltip.style.display = 'block';
-                tooltip.style.left = `${e.clientX + 10}px`;
-                tooltip.style.top = `${e.clientY + 10}px`;
               });
               span.addEventListener('mouseout', () => {
                 tooltip.style.display = 'none';
+              });
+              span.addEventListener('mousemove', (e) => {
+                tooltip.style.left = `${e.clientX + 10}px`;
+                tooltip.style.top = `${e.clientY + 10}px`;
               });
             }
 
