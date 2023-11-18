@@ -129,6 +129,8 @@ func checkForStringInFile(filename string, needle string, threshold float64) boo
 }
 
 func checkForStringInDirectory(dirname string, needle string, threshold float64, ignore []string) []string {
+	matches := []string{}
+
 	files, err := os.ReadDir(dirname)
 	if err != nil {
 		panic(err)
@@ -150,17 +152,15 @@ func checkForStringInDirectory(dirname string, needle string, threshold float64,
 
 		if file.IsDir() {
 			files := checkForStringInDirectory(filename, needle, threshold, ignore)
-			if len(files) > 0 {
-				return files
-			}
+			matches = append(matches, files...)
 		} else {
 			if checkForStringInFile(filename, needle, threshold) {
-				return []string{filename}
+				matches = append(matches, filename)
 			}
 		}
 	}
 
-	return []string{}
+	return matches
 }
 
 func samplesFromFile(filename string) []Sample {
