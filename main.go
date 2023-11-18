@@ -287,15 +287,22 @@ func startServer(port int) {
 				Tooltip: "",
 			}
 
+			if len(files) > 2 {
+				line.Color = color.RGBA{255, 0, 0, 255} // Red
+			} else if len(files) > 1 {
+				line.Color = color.RGBA{255, 128, 0, 255} // Orange
+			} else if len(files) > 0 {
+				line.Color = color.RGBA{255, 255, 0, 255} // Yellow
+			} else {
+				line.Color = color.RGBA{0, 255, 0, 255} // Green
+			}
+
 			if len(files) > 0 {
-				line.Color = color.RGBA{255, 0, 0, 255}
 				for _, l := range sample.neighbors {
 					line.Tooltip += l + "\n"
 				}
 				line.Tooltip += "\n"
 				line.Tooltip += strings.Join(files, "\n")
-			} else {
-				line.Color = color.RGBA{0, 255, 0, 255}
 			}
 
 			lines = append(lines, line)
