@@ -289,6 +289,11 @@ func startServer(port int) {
 
 			if len(files) > 0 {
 				line.Color = color.RGBA{255, 0, 0, 255}
+				for _, l := range sample.neighbors {
+					line.Tooltip += l + "\n"
+				}
+				line.Tooltip += "\n"
+				line.Tooltip += strings.Join(files, "\n")
 			} else {
 				line.Color = color.RGBA{0, 255, 0, 255}
 			}
