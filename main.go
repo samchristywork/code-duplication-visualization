@@ -22,6 +22,11 @@ type Line struct {
 	Tooltip string
 }
 
+type Match struct {
+	Filename string
+	Line     int
+}
+
 func max(a, b int) int {
 	if a > b {
 		return a
@@ -157,6 +162,28 @@ func checkForStringInDirectory(dirname string, needle string, threshold float64,
 			if checkForStringInFile(filename, needle, threshold) {
 				matches = append(matches, filename)
 			}
+		}
+	}
+
+	return matches
+}
+
+func findMatchesInFile(filename string, needle string, threshold float64) []Match {
+	matches := []Match{}
+
+	lines := strings.Split(getFileContents(filename), "\n")
+	n := strings.Split(needle, "\n")
+
+	for i := 0; i < len(lines)-len(n); i++ {
+		score := 0
+		for j := 0; j < len(n); j++ {
+			if compare(lines[i+j], n[j]) {
+				score++
+			}
+		}
+
+		if score >= int(float64(len(n))*threshold) {
+			matches = append(matches, Match{filename, i})
 		}
 	}
 
