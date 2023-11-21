@@ -190,6 +190,39 @@ func findMatchesInFile(filename string, needle string, threshold float64) []Matc
 	return matches
 }
 
+func findMatches(dirname string, needle string, threshold float64, ignore []string) []Match {
+	matches := []Match{}
+
+	files, err := os.ReadDir(dirname)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, file := range files {
+		filename := dirname + "/" + file.Name()
+
+		ignoreFlag := false
+		for _, ignoreFile := range ignore {
+			if filename == ignoreFile {
+				ignoreFlag = true
+			}
+		}
+
+		if ignoreFlag {
+			continue
+		}
+
+		if file.IsDir() {
+			matches = append(matches, findMatches(filename, needle, threshold, ignore)...)
+		} else {
+			m := findMatchesInFile(filename, needle, threshold)
+			matches = append(matches, m...)
+		}
+	}
+
+	return matches
+}
+
 func samplesFromFile(filename string) []Sample {
 	content := getFileContents(filename)
 	lines := strings.Split(content, "\n")
