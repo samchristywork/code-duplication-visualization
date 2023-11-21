@@ -339,30 +339,35 @@ func startServer(port int) {
 
 		lines := []Line{}
 
-		for _, sample := range samples {
-			files := checkForStringInDirectory("target", strings.Join(sample.neighbors, "\n"), 0.3, []string{filename})
+		for n, sample := range samples {
+			matches := findMatches("target", strings.Join(sample.neighbors, "\n"), 0.7, []string{filename})
 
 			line := Line{
 				Line:    sample.line,
 				Tooltip: "",
 			}
 
-			if len(files) > 2 {
+			if len(matches) >= 3 {
 				line.Color = color.RGBA{255, 0, 0, 255} // Red
-			} else if len(files) > 1 {
+			} else if len(matches) == 2 {
 				line.Color = color.RGBA{255, 128, 0, 255} // Orange
-			} else if len(files) > 0 {
+			} else if len(matches) == 1 {
 				line.Color = color.RGBA{255, 255, 0, 255} // Yellow
 			} else {
 				line.Color = color.RGBA{0, 255, 0, 255} // Green
 			}
 
-			if len(files) > 0 {
+			if len(matches) > 0 {
+				line.Tooltip += fmt.Sprintf("%s:%d\n\n", filename, n)
+
 				for _, l := range sample.neighbors {
 					line.Tooltip += l + "\n"
 				}
 				line.Tooltip += "\n"
-				line.Tooltip += strings.Join(files, "\n")
+
+				for _, m := range matches {
+					line.Tooltip += fmt.Sprintf("%s (%d)\n", m.Filename, m.Line)
+				}
 			}
 
 			lines = append(lines, line)
