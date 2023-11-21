@@ -397,7 +397,10 @@ func startServer(port int) {
 	http.Handle("/", middleware(http.FileServer(http.Dir("./static"))))
 
 	fmt.Printf("Starting server on port %d\n", port)
-	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func main() {
