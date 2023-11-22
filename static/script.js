@@ -37,9 +37,10 @@ fetch(`/files`)
       panel.className = 'panel';
       target.appendChild(panel);
 
-      let title = document.createElement('div');
+      let title = document.createElement('a');
       title.className = 'title';
       title.innerText = file;
+      title.href = `/display-file?filename=${file}`;
       panel.appendChild(title);
 
       fetch(`/file?file=${file}`)
