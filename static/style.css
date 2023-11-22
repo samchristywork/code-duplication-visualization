@@ -29,6 +29,10 @@ body {
   min-width: 5rem;
 }
 
+.panel:hover {
+  border: 1px solid white;
+}
+
 .line {
   white-space: pre;
   overflow: hidden;
