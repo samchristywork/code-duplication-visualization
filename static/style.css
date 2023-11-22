@@ -30,7 +30,6 @@ body {
 }
 
 .line {
-  display: block;
   white-space: pre;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -4,7 +4,7 @@ function makeLine(line) {
   let span = document.createElement('span');
 
   span.className = 'line';
-  span.innerText = line.Line;
+  span.innerText = line.Line + '\n';
   span.style.color = `rgba(${line.Color.R}, ${line.Color.G}, ${line.Color.B}, ${line.Color.A})`;
 
   if (line.Tooltip) {
