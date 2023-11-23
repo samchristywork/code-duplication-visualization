@@ -234,7 +234,9 @@ func samplesFromFile(filename string) []Sample {
 			neighbors: make([]string, 9),
 		}
 
-		for j := -4; j <= 4; j++ {
+		windowSize := 4
+
+		for j := -windowSize; j <= windowSize; j++ {
 			if i+j < 0 || i+j >= len(lines) {
 				sample.neighbors[j+4] = ""
 			} else {
