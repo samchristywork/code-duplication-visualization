@@ -14,7 +14,7 @@ fetch(`/files`)
       let title = document.createElement('a');
       title.className = 'title';
       title.innerText = file;
-      title.href = `/display-file?filename=${file}`;
+      title.href = `/display-file.html?filename=${file}`;
       panel.appendChild(title);
 
       fetch(`/file?file=${file}`)
